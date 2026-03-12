@@ -363,23 +363,9 @@ canvas { position: fixed; top:0; left:0; z-index:1; }
 }
 
 @media (max-width: 640px) {
-  :root {
-    --album-book-width: min(90vw, 420px);
-  }
-
   #nextPage {
-  margin-top: 15px;
-  padding: 5px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background: #ff69b4;
-  color: white;
-  position: relative;
-  z-index: 12;
-  pointer-events: auto;
-}
+    display: none;
+  }
 
 
   #albumTextContainer {
@@ -561,6 +547,12 @@ canvas { position: fixed; top:0; left:0; z-index:1; }
     display: none;
   }
 }
+
+
+
+
+
+
 
 
 
