@@ -1,4 +1,4 @@
-﻿// ==== MATRIX ====
+// ==== MATRIX ====
 const canvas = document.getElementById("matrixCanvas");
 const ctx = canvas.getContext("2d");
 const starField = document.getElementById("starField");
@@ -140,108 +140,21 @@ const timer = setInterval(() => {
         return;
       }
 
-      animateLegoWord(words[idx++], message, showNext);
+      animateMainMessage(words[idx++], message, 1200, showNext);
     }
 
     showNext();
   }
 }, 1000);
 
-function animateLegoWord(text, container, callback) {
-  const maxBlocks = 700;
-  const width = container.clientWidth || window.innerWidth;
-  const fontSizeWord = Math.min(140, Math.max(60, Math.floor(width / 6)));
-  const height = Math.max(120, Math.floor(fontSizeWord * 1.6));
-
-  container.innerHTML = "";
-  container.style.height = `${height}px`;
-
-  const canvasWord = document.createElement("canvas");
-  canvasWord.width = width;
-  canvasWord.height = height;
-  const c = canvasWord.getContext("2d");
-  c.clearRect(0, 0, width, height);
-  c.fillStyle = "#fff";
-  c.textAlign = "center";
-  c.textBaseline = "middle";
-  c.font = `900 ${fontSizeWord}px "Trebuchet MS", "Arial Black", sans-serif`;
-  c.fillText(text, width / 2, height / 2);
-
-  const data = c.getImageData(0, 0, width, height).data;
-  let step = 7;
-  let targets = [];
-
-  const sampleTargets = () => {
-    targets = [];
-    for (let y = 0; y < height; y += step) {
-      for (let x = 0; x < width; x += step) {
-        const idx = (y * width + x) * 4 + 3;
-        if (data[idx] > 80) {
-          targets.push({ x, y });
-        }
-      }
-    }
-  };
-
-  sampleTargets();
-  while (targets.length > maxBlocks && step < 14) {
-    step += 2;
-    sampleTargets();
-  }
-
-  const colors = ["#ff69b4", "#ff85c2", "#ff4fa6", "#ff9ad1", "#ff6fbf"];
-  const fragment = document.createDocumentFragment();
-
-  targets.forEach((t) => {
-    const block = document.createElement("span");
-    block.className = "lego-block";
-    block.style.left = `${Math.random() * width}px`;
-    block.style.top = `${Math.random() * height}px`;
-    block.style.background = colors[Math.floor(Math.random() * colors.length)];
-    block.style.opacity = "0";
-    block.style.transform = `translate(-50%, -50%) scale(0.3)`;
-    block.dataset.tx = t.x;
-    block.dataset.ty = t.y;
-    fragment.appendChild(block);
-  });
-
-  container.appendChild(fragment);
-
-  const textSpan = document.createElement("div");
-  textSpan.className = "lego-word";
-  textSpan.textContent = text;
-  container.appendChild(textSpan);
-
-  requestAnimationFrame(() => {
-    const blocks = container.querySelectorAll(".lego-block");
-    blocks.forEach((block) => {
-      block.style.left = `${block.dataset.tx}px`;
-      block.style.top = `${block.dataset.ty}px`;
-      block.style.opacity = "1";
-      block.style.transform = `translate(-50%, -50%) scale(1)`;
-    });
-
-    const formDuration = 900;
-    setTimeout(() => { textSpan.classList.add("lego-word-visible"); }, formDuration - 80);
-    const holdDuration = 420;
-    const explodeDuration = 650;
-
-    setTimeout(() => {
-      blocks.forEach((block) => {
-        const dx = (Math.random() - 0.5) * 160;
-        const dy = (Math.random() - 0.5) * 120;
-        block.style.left = `${Number(block.dataset.tx) + dx}px`;
-        block.style.top = `${Number(block.dataset.ty) + dy}px`;
-        block.style.opacity = "0";
-        block.style.transform = `translate(-50%, -50%) scale(0.6) rotate(${(Math.random() - 0.5) * 60}deg)`;
-      });
-
-      setTimeout(() => {
-        container.innerHTML = "";
-        if (callback) callback();
-      }, explodeDuration);
-    }, formDuration + holdDuration);
-  });
+function animateMainMessage(text, container, duration, callback) {
+  container.classList.remove("message-pop");
+  container.textContent = text;
+  void container.offsetWidth;
+  container.classList.add("message-pop");
+  setTimeout(() => {
+    if (callback) callback();
+  }, duration);
 }
 
 // ==== Typing effect ====
@@ -615,10 +528,11 @@ function startPhotoHeartScene() {
   canvas.classList.remove("is-beating");
 
   const photoList = photos.flat();
-  const tileCount = 64;
+  const isSmall = window.innerWidth < 600;
+  const tileCount = isSmall ? 42 : 64;
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight * 0.56;
-  const heartScale = Math.min(window.innerWidth, window.innerHeight) * 0.017;
+  const heartScale = Math.min(window.innerWidth, window.innerHeight) * (isSmall ? 0.016 : 0.017);
 
   const targets = [];
   for (let i = 0; i < tileCount; i++) {
@@ -640,11 +554,13 @@ function startPhotoHeartScene() {
     img.alt = "Foto de recuerdo";
     tile.appendChild(img);
 
-    const startX = Math.random() * window.innerWidth;
-    const startY = Math.random() * window.innerHeight;
-    tile.style.left = `${startX}px`;
-    tile.style.top = `${startY}px`;
+    // Random start positions
+    tile.style.left = `${Math.random() * window.innerWidth}px`;
+    tile.style.top = `${Math.random() * window.innerHeight}px`;
+    tile.style.opacity = "0";
+    tile.style.transform = "translate(-50%, -50%) scale(0.4)";
     tile.style.transitionDelay = `${i * 18}ms`;
+
     canvas.appendChild(tile);
 
     requestAnimationFrame(() => {
@@ -652,12 +568,12 @@ function startPhotoHeartScene() {
         tile.style.opacity = "1";
         tile.style.left = `${target.x}px`;
         tile.style.top = `${target.y}px`;
-        tile.style.transform = `translate(-50%, -50%) scale(1) rotate(${(Math.random() - 0.5) * 8}deg)`;
+        tile.style.transform = `translate(-50%, -50%) scale(1) rotate(${(Math.random() - 0.5) * 6}deg)`;
       });
     });
   });
 
-  const beatStartDelay = tileCount * 18 + 1000;
+  const beatStartDelay = tileCount * 18 + 900;
   setTimeout(() => {
     canvas.classList.add("is-beating");
   }, beatStartDelay);
@@ -706,6 +622,21 @@ album.addEventListener("touchend", (event) => {
     goToPrevPage();
   }
 }, { passive: true });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
