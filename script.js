@@ -130,7 +130,7 @@ drawMatrix();
 let count = 3;
 const countdown = document.getElementById("countdown");
 const message = document.getElementById("message");
-const words = ["FELIZ", "CUMPLEAÑOS", "JANE"];
+const words = ["HAPPY", "BIRTHDAY", "JANE"];
 let idx = 0;
 
 const timer = setInterval(() => {
@@ -390,9 +390,9 @@ const photos = [
   ["photo5.jpg", "photo6.jpg"]
 ];
 const texts = [
-  "Feliz cumpleanos, Jane. Hoy pense en ti todo el dia, y aun asi siento que ninguna palabra alcanza para decirte cuanto te amo. Verte crecer y brillar me llena de orgullo y de paz. Con amor, Misael.",
-  "Quiero que sepas que no solo eres mi novia; eres mi hogar, mi calma y mi mayor alegria. Gracias por cuidarme y por hacerme sentir amado cada dia. Te amo, Misael.",
-  "Espero cada momento que vamos a vivir en este nuevo capitulo de tu vida. Que tu dia sea tan hermoso y luminoso como tu alma. Siempre tuyo, Misael."
+  "Happy Birthday Jane.",
+  "Happy Birthday Jane.",
+  "Happy Birthday Jane."
 ];
 let page = 0;
 let finalSequenceStarted = false;
@@ -631,6 +631,7 @@ album.addEventListener("touchend", (event) => {
     goToPrevPage();
   }
 }, { passive: true });
+
 
 
 
