@@ -7,8 +7,16 @@ const bgMusic = document.getElementById("bgMusic");
 function startBackgroundMusic() {
   if (!bgMusic) return;
   bgMusic.volume = 0.55;
+  const desiredStart = 45;
   let startedAtOffset = false;
   let musicStarted = false;
+
+  const applyOffset = () => {
+    if (startedAtOffset) return;
+    if (!isFinite(bgMusic.duration) || bgMusic.duration <= 0) return;
+    bgMusic.currentTime = Math.min(desiredStart, Math.max(0, bgMusic.duration - 0.25));
+    startedAtOffset = true;
+  };
 
   const removeInteractionListeners = () => {
     window.removeEventListener("click", tryPlay);
@@ -18,16 +26,15 @@ function startBackgroundMusic() {
 
   const tryPlay = () => {
     if (musicStarted) return;
-    if (!startedAtOffset) {
-      try {
-        bgMusic.currentTime = 45;
-        startedAtOffset = true;
-      } catch (_) {
-        // Some browsers require metadata before seeking.
-      }
+    try {
+      bgMusic.currentTime = desiredStart;
+      startedAtOffset = true;
+    } catch (_) {
+      // Some browsers require metadata before seeking.
     }
     bgMusic.play().then(() => {
       musicStarted = true;
+      applyOffset();
       removeInteractionListeners();
     }).catch(() => {
       // Browser blocked autoplay; keep retry points active.
@@ -35,11 +42,12 @@ function startBackgroundMusic() {
   };
 
   bgMusic.addEventListener("loadedmetadata", () => {
-    if (!startedAtOffset) {
-      bgMusic.currentTime = Math.min(45, Math.max(0, (bgMusic.duration || 45) - 0.25));
-      startedAtOffset = true;
-    }
+    applyOffset();
     tryPlay();
+  });
+
+  bgMusic.addEventListener("play", () => {
+    applyOffset();
   });
 
   bgMusic.addEventListener("canplay", tryPlay);
@@ -240,11 +248,12 @@ function initHeartParticles() {
   cleanupHeartParticles();
 
   const scene = new THREE.Scene();
+  const isSmallHeart = window.innerWidth < 700;
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
-  camera.position.z = 500;
+  camera.position.z = isSmallHeart ? 650 : 500;
 
   const renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmallHeart ? 1 : 1.5));
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
@@ -253,7 +262,7 @@ function initHeartParticles() {
 
   const path = document.querySelector("path");
   const length = path.getTotalLength();
-  const pointStep = 1.0;
+  const pointStep = isSmallHeart ? 1.6 : 1.0;
   const vertices = [];
 
   const tl = gsap.timeline({ repeat: -1, yoyo: true });
@@ -290,7 +299,7 @@ function initHeartParticles() {
   heartResizeHandler = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmallHeart ? 1 : 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
   };
 
@@ -559,7 +568,7 @@ function startPhotoHeartScene() {
     tile.style.top = `${Math.random() * window.innerHeight}px`;
     tile.style.opacity = "0";
     tile.style.transform = "translate(-50%, -50%) scale(0.4)";
-    tile.style.transitionDelay = `${i * 18}ms`;
+    tile.style.transitionDelay = `${i * (isSmall ? 24 : 18)}ms`;
 
     canvas.appendChild(tile);
 
@@ -573,7 +582,7 @@ function startPhotoHeartScene() {
     });
   });
 
-  const beatStartDelay = tileCount * 18 + 900;
+  const beatStartDelay = tileCount * (isSmall ? 24 : 18) + 1000;
   setTimeout(() => {
     canvas.classList.add("is-beating");
   }, beatStartDelay);
@@ -622,9 +631,6 @@ album.addEventListener("touchend", (event) => {
     goToPrevPage();
   }
 }, { passive: true });
-
-
-
 
 
 
