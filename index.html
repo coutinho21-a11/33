@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Animation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="starField" aria-hidden="true"></div>
+<canvas id="matrixCanvas"></canvas>
+<audio id="bgMusic" src="birthday-music.mp3" preload="auto" loop></audio>
+
+<div id="countdown">3</div>
+<div id="message"></div>
+
+<div id="finalStage">
+  <div id="finalTitle">FELIZ CUMPLEAÑOS, MI AMOR</div>
+  <img id="catGif" src="chat-guitar.gif" alt="Chat GIF">
+</div>
+
+<div id="heartRain"></div>
+<div id="transitionOverlay"></div>
+
+<!-- Album -->
+<div id="albumContainer">
+  <div id="albumCover">
+    <img src="cover.jpg" alt="Album Cover">
+    <p>Recuerdos &#10084;&#65039;</p>
+  </div>
+  <div id="album">
+    <div id="albumTextContainer">
+      <div id="albumText"></div>
+    </div>
+    <div class="albumPhotos">
+      <img id="leftPhoto">
+      <img id="rightPhoto">
+    </div>
+    <button id="nextPage">Siguiente &#10084;&#65039;</button>
+  </div>
+</div>
+
+<div id="photoHeartScene">
+  <div id="photoHeartTitle">PARA SIEMPRE NOSOTROS</div>
+  <div id="photoHeartCanvas"></div>
+</div>
+
+<svg viewBox="0 0 600 552" style="display:none;">
+  <path d="M300,107.77C284.68,55.67,239.76,0,162.31,0,64.83,0,0,82.08,0,171.71c0,.48,0,.95,0,1.43-.52,19.5,0,217.94,299.87,379.69v0l0,0,.05,0,0,0,0,0v0C600,391.08,600.48,192.64,600,173.14c0-.48,0-.95,0-1.43C600,82.08,535.17,0,437.69,0,360.24,0,315.32,55.67,300,107.77" fill="#ee5282"/>
+</svg>
+
+<script src='https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/gsap.min.js'></script>
+<script src="script.js"></script>
+</body>
+</html>
+
+
