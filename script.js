@@ -130,7 +130,7 @@ drawMatrix();
 let count = 3;
 const countdown = document.getElementById("countdown");
 const message = document.getElementById("message");
-const words = ["HAPPY", "BIRTHDAY", "JANE"];
+const words = ["HAPPY", "BIRTHDAY", "JENA"];
 let idx = 0;
 
 const timer = setInterval(() => {
@@ -390,9 +390,9 @@ const photos = [
   ["photo5.jpg", "photo6.jpg"]
 ];
 const texts = [
-  "Happy Birthday Jane.",
-  "Happy Birthday Jane.",
-  "Happy Birthday Jane."
+  "Happy birthday, Jenna. Every moment with you is a gift, and today I just want you to feel how deeply you are loved.",
+  "You are my peace, my joy, and my favorite person. I hope this year brings you everything your heart has been wishing for.",
+  "I can't wait to make more beautiful memories with you. May your day shine as brightly as your smile. Love, Misael."
 ];
 let page = 0;
 let finalSequenceStarted = false;
@@ -407,7 +407,7 @@ let touchStartY = 0;
 let touchStartTime = 0;
 
 if (coverText) {
-  coverText.textContent = useSwipeToOpen ? "Desliza para abrir ❤️" : "Haz clic para abrir ❤️";
+  coverText.textContent = useSwipeToOpen ? "Swipe to open ❤️" : "Click to open ❤️";
 }
 
 function openAlbumFromCover() {
@@ -560,7 +560,7 @@ function startPhotoHeartScene() {
 
     const img = document.createElement("img");
     img.src = photoList[i % photoList.length];
-    img.alt = "Foto de recuerdo";
+    img.alt = "Memory photo";
     tile.appendChild(img);
 
     // Random start positions
@@ -631,7 +631,6 @@ album.addEventListener("touchend", (event) => {
     goToPrevPage();
   }
 }, { passive: true });
-
 
 
 
